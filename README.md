@@ -1,2 +1,1 @@
-# yantedarik-i
-YanMuhasebe Programıdır
+
