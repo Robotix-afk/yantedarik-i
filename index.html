@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendi Dilimiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #07070b;
+            --bg: #0c0c12;
+            --card: rgba(22, 22, 32, 0.75);
+            --card-solid: #14141e;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --text: #f0f0f5;
+            --muted: #7a7a8c;
+            --accent: #8b5cf6;
+            --accent-2: #a78bfa;
+            --accent-glow: rgba(139, 92, 246, 0.35);
+            --success: #34d399;
+            --success-dim: rgba(52, 211, 153, 0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.18;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatGlow 18s ease-in-out infinite;
+        }
+
+        .bg-glow-1 {
+            background: #8b5cf6;
+            top: -200px;
+            left: -100px;
+        }
+
+        .bg-glow-2 {
+            background: #6366f1;
+            bottom: -250px;
+            right: -150px;
+            animation-delay: -9s;
+        }
+
+        @keyframes floatGlow {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, 30px) scale(1.08); }
+            66% { transform: translate(-30px, 50px) scale(0.95); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            color: var(--accent-2);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 18px;
+        }
+
+        .logo-badge span {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        header h1 {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 30%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 1.05rem;
+            font-weight: 400;
+        }
+
+        /* Tabs */
+        .tabs-wrap {
+            margin-bottom: 24px;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--card-solid);
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .tab {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-family: inherit;
+            font-weight: 550;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: color 0.25s;
+        }
+
+        .tab.active {
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text);
+        }
+
+        .tab-indicator {
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            left: 6px;
+            width: calc(50% - 9px);
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+            z-index: 0;
+        }
+
+        .tabs[data-active="decode"] .tab-indicator {
+            transform: translateX(calc(100% + 6px));
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+            animation: panelIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Input card */
+        .input-card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+        }
+
+        .input-card:focus-within {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .input-label span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .char-count {
+            font-size: 0.75rem;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 130px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.55;
+            resize: vertical;
+            outline: none;
+        }
+
+        textarea::placeholder {
+            color: #3f3f4d;
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 28px;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 22px;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: white;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px var(--accent-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(255,255,255,0.15), transparent);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .btn-primary:hover::after {
+            opacity: 1;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            color: var(--text);
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* Result Card */
+        .result-card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(16px) scale(0.98);
+            pointer-events: none;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-bottom: 32px;
+        }
+
+        .result-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.12), rgba(99, 102, 241, 0.08));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .translate-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px var(--accent-glow);
+        }
+
+        .translate-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .icon-btn.copied {
+            color: var(--success);
+        }
+
+        .result-body {
+            padding: 22px 20px;
+        }
+
+        .cipher-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            word-break: break-word;
+            background: linear-gradient(135deg, #e0e0ff, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .translation-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 10px 14px;
+            background: var(--success-dim);
+            border-radius: 10px;
+            border: 1px solid rgba(52, 211, 153, 0.15);
+        }
+
+        .translation-row .label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--success);
+            white-space: nowrap;
+        }
+
+        .translation-row .value {
+            font-size: 0.95rem;
+            color: #a7f3d0;
+            line-height: 1.4;
+        }
+
+        /* Live preview */
+        .live-hint {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+        }
+
+        .live-hint.visible {
+            opacity: 1;
+        }
+
+        /* Chat Preview Section */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+        }
+
+        .section-title h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
+
+        .msg {
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            transition: border-color 0.25s, transform 0.25s;
+            animation: msgIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .msg:nth-child(1) { animation-delay: 0.35s; }
+        .msg:nth-child(2) { animation-delay: 0.45s; }
+        .msg:nth-child(3) { animation-delay: 0.55s; }
+
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateX(-12px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .msg:hover {
+            border-color: rgba(139, 92, 246, 0.25);
+            transform: translateX(4px);
+        }
+
+        .msg-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .msg-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .msg-avatar.a1 { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+        .msg-avatar.a2 { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+        .msg-avatar.a3 { background: linear-gradient(135deg, #059669, #34d399); }
+
+        .msg-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-2);
+        }
+
+        .msg-cipher {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+            color: #ddd6fe;
+        }
+
+        .msg-tr {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .msg-tr strong {
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 48px;
+            text-align: center;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+        }
+
+        footer p {
+            font-size: 0.78rem;
+            color: #3f3f4d;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1a1a26;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            color: var(--success);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container { padding: 28px 14px 50px; }
+            header h1 { font-size: 1.85rem; }
+            .cipher-text { font-size: 1.2rem; }
+            .btn { padding: 12px 16px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo-badge">
+                <span></span>
+                Gizli Alfabe
+            </div>
+            <h1>Kendi Dilimiz</h1>
+            <p>Yaz • Şifrele • Anlaş</p>
+        </header>
+
+        <div class="tabs-wrap">
+            <div class="tabs" id="tabs" data-active="encode">
+                <div class="tab-indicator"></div>
+                <button class="tab active" data-tab="encode">Türkçe → Dilimiz</button>
+                <button class="tab" data-tab="decode">Dilimiz → Türkçe</button>
+            </div>
+        </div>
+
+        <!-- ENCODE -->
+        <div class="panel active" id="encode-panel">
+            <div class="input-card">
+                <div class="input-label">
+                    <span>Türkçe Metin</span>
+                    <span class="char-count" id="encode-count">0</span>
+                </div>
+                <textarea id="input-encode" placeholder="Merhaba, nasılsın? Bugün ne yapıyorsun?" spellcheck="false"></textarea>
+            </div>
+            <p class="live-hint" id="encode-hint">Yazmaya başla, canlı önizleme aktif</p>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="doEncode()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    Şifrele
+                </button>
+                <button class="btn btn-ghost" onclick="clearEncode()">Temizle</button>
+            </div>
+
+            <div class="result-card" id="result-encode">
+                <div class="result-header">
+                    <span class="translate-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+                        ÇEVİR
+                    </span>
+                    <div class="result-actions">
+                        <button class="icon-btn" id="copy-encode" onclick="copyResult('cipher-out', this)" title="Kopyala">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events:none"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="result-body">
+                    <div class="cipher-text" id="cipher-out"></div>
+                    <div class="translation-row">
+                        <span class="label">Çevirisi:</span>
+                        <span class="value" id="original-out"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DECODE -->
+        <div class="panel" id="decode-panel">
+            <div class="input-card">
+                <div class="input-label">
+                    <span>Şifreli Metin</span>
+                    <span class="char-count" id="decode-count">0</span>
+                </div>
+                <textarea id="input-decode" placeholder="Fylpqwq, gqşğdşğg?" spellcheck="false"></textarea>
+            </div>
+            <p class="live-hint" id="decode-hint">Şifreli metni yapıştır, çözülsün</p>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="doDecode()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                    Çöz
+                </button>
+                <button class="btn btn-ghost" onclick="clearDecode()">Temizle</button>
+            </div>
+
+            <div class="result-card" id="result-decode">
+                <div class="result-header">
+                    <span class="translate-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+                        ÇEVİR
+                    </span>
+                    <div class="result-actions">
+                        <button class="icon-btn" id="copy-decode" onclick="copyResult('decoded-out', this)" title="Kopyala">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events:none"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="result-body">
+                    <div class="cipher-text" id="decoded-out"></div>
+                    <div class="translation-row">
+                        <span class="label">Orijinal:</span>
+                        <span class="value" id="cipher-original"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Örnek Sohbet -->
+        <div class="section-title">
+            <h3>Örnek Sohbet</h3>
+        </div>
+        <div class="chat-list">
+            <div class="msg">
+                <div class="msg-header">
+                    <div class="msg-avatar a1">A1</div>
+                    <span class="msg-name">A1</span>
+                </div>
+                <div class="msg-cipher">FYLPQWQ</div>
+                <div class="msg-tr">(<strong>Çevirisi:</strong> MERHABA)</div>
+            </div>
+            <div class="msg">
+                <div class="msg-header">
+                    <div class="msg-avatar a2">A2</div>
+                    <span class="msg-name">A2</span>
+                </div>
+                <div class="msg-cipher">GQŞĞDŞĞG?</div>
+                <div class="msg-tr">(<strong>Çevirisi:</strong> NASILSIN?)</div>
+            </div>
+            <div class="msg">
+                <div class="msg-header">
+                    <div class="msg-avatar a3">A3</div>
+                    <span class="msg-name">A3</span>
+                </div>
+                <div class="msg-cipher">ÜBÜbğf, şyg tyh</div>
+                <div class="msg-tr">(<strong>Çevirisi:</strong> İYİYİM, SEN DEH)</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Kendi Dilimiz • Harita korumalı • 2026</p>
+        </footer>
+    </div>
+
+    <div class="toast" id="toast">Kopyalandı</div>
+
+    <script>
+        const encodeMap = {
+            'A':'Q','B':'W','C':'E','Ç':'R','D':'T','E':'Y','F':'U','G':'I','Ğ':'O','H':'P',
+            'I':'Ğ','İ':'Ü','J':'A','K':'S','L':'D','M':'F','N':'G','O':'H','Ö':'J','P':'K',
+            'R':'L','S':'Ş','Ş':'İ','T':'Z','U':'X','Ü':'C','V':'V','Y':'B','Z':'N'
+        };
+        const decodeMap = {};
+        Object.entries(encodeMap).forEach(([k,v]) => decodeMap[v] = k);
+
+        function toUpperTR(ch) {
+            if (ch === 'ı') return 'I';
+            if (ch === 'i') return 'İ';
+            return ch.toUpperCase();
+        }
+        function toLowerTR(ch) {
+            if (ch === 'I') return 'ı';
+            if (ch === 'İ') return 'i';
+            return ch.toLowerCase();
+        }
+
+        function encodeChar(ch) {
+            const up = toUpperTR(ch);
+            if (encodeMap[up]) {
+                const mapped = encodeMap[up];
+                return (ch !== up) ? toLowerTR(mapped) : mapped;
+            }
+            return ch;
+        }
+        function decodeChar(ch) {
+            const up = toUpperTR(ch);
+            if (decodeMap[up]) {
+                const mapped = decodeMap[up];
+                return (ch !== up) ? toLowerTR(mapped) : mapped;
+            }
+            return ch;
+        }
+
+        function encodeText(t) { return [...t].map(encodeChar).join(''); }
+        function decodeText(t) { return [...t].map(decodeChar).join(''); }
+
+        // Tabs
+        const tabsEl = document.getElementById('tabs');
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + '-panel').classList.add('active');
+                tabsEl.dataset.active = tab.dataset.tab;
+            });
+        });
+
+        // Live char count + hint
+        const encodeInput = document.getElementById('input-encode');
+        const decodeInput = document.getElementById('input-decode');
+
+        encodeInput.addEventListener('input', () => {
+            document.getElementById('encode-count').textContent = encodeInput.value.length;
+            document.getElementById('encode-hint').classList.toggle('visible', encodeInput.value.length > 0);
+        });
+        decodeInput.addEventListener('input', () => {
+            document.getElementById('decode-count').textContent = decodeInput.value.length;
+            document.getElementById('decode-hint').classList.toggle('visible', decodeInput.value.length > 0);
+        });
+
+        // Actions
+        function doEncode() {
+            const val = encodeInput.value.trim();
+            if (!val) return;
+            document.getElementById('cipher-out').textContent = encodeText(val);
+            document.getElementById('original-out').textContent = val;
+            const card = document.getElementById('result-encode');
+            card.classList.remove('show');
+            void card.offsetWidth;
+            card.classList.add('show');
+        }
+
+        function doDecode() {
+            const val = decodeInput.value.trim();
+            if (!val) return;
+            document.getElementById('decoded-out').textContent = decodeText(val);
+            document.getElementById('cipher-original').textContent = val;
+            const card = document.getElementById('result-decode');
+            card.classList.remove('show');
+            void card.offsetWidth;
+            card.classList.add('show');
+        }
+
+        function clearEncode() {
+            encodeInput.value = '';
+            document.getElementById('encode-count').textContent = '0';
+            document.getElementById('encode-hint').classList.remove('visible');
+            document.getElementById('result-encode').classList.remove('show');
+        }
+
+        function clearDecode() {
+            decodeInput.value = '';
+            document.getElementById('decode-count').textContent = '0';
+            document.getElementById('decode-hint').classList.remove('visible');
+            document.getElementById('result-decode').classList.remove('show');
+        }
+
+        function copyResult(id, btn) {
+            // SVG tıklanırsa butonu bul
+            if (btn && btn.closest) {
+                btn = btn.closest('.icon-btn') || btn;
+            }
+
+            const el = document.getElementById(id);
+            const text = (el && el.textContent) ? el.textContent.trim() : '';
+            
+            if (!text) {
+                showToast('Önce metni şifrele / çöz');
+                return;
+            }
+
+            // 1) Modern API
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                navigator.clipboard.writeText(text)
+                    .then(() => onCopySuccess(btn))
+                    .catch(() => fallbackCopy(text, btn));
+                return;
+            }
+
+            // 2) Fallback
+            fallbackCopy(text, btn);
+        }
+
+        function fallbackCopy(text, btn) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:none;outline:none;box-shadow:none;background:transparent;opacity:0;';
+            document.body.appendChild(ta);
+
+            // iOS / older Safari support
+            if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
+                const range = document.createRange();
+                range.selectNodeContents(ta);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                ta.setSelectionRange(0, 999999);
+            } else {
+                ta.select();
+                ta.setSelectionRange(0, text.length);
+            }
+
+            let success = false;
+            try {
+                success = document.execCommand('copy');
+            } catch (err) {
+                success = false;
+            }
+
+            document.body.removeChild(ta);
+
+            if (success) {
+                onCopySuccess(btn);
+            } else {
+                // Son çare: kullanıcıya metni gösterip manuel kopyalamasını söyle
+                window.prompt('Kopyalamak için Ctrl+C / Cmd+C yapın:', text);
+                showToast('Metni elle kopyalayın');
+            }
+        }
+
+        function onCopySuccess(btn) {
+            if (btn) {
+                btn.classList.add('copied');
+                setTimeout(() => btn.classList.remove('copied'), 1800);
+            }
+            showToast('Kopyalandı ✓');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            if (!t) return;
+            t.textContent = msg;
+            t.classList.remove('show');
+            // reflow
+            void t.offsetWidth;
+            t.classList.add('show');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        // Keyboard shortcuts
+        encodeInput.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') doEncode();
+        });
+        decodeInput.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') doDecode();
+        });
+    </script>
+</body>
+</html>
